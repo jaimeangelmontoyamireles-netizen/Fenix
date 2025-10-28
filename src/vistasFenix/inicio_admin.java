@@ -4,6 +4,9 @@
  */
 package vistasFenix;
 
+import controlador.clase_login;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Asus
@@ -117,9 +120,22 @@ public class inicio_admin extends javax.swing.JFrame {
 
     private void btn_ingresar_adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ingresar_adminActionPerformed
         // TODO add your handling code here:
-        ventana_administrador admin = new ventana_administrador();
-        admin.setVisible(true);
-        this.dispose();
+        //aqui definimos la herencia 
+       clase_login login_admin = new clase_login();
+       //aqui se lee el textfield de usuario
+       String nombre = txtusuario_admin.getText();
+       //aqui convertimos el password fiel a cadena para poder hacer la comparacion en el if 
+       char[] passwordchars = pass_admin.getPassword();
+       String contra_admin = new String(passwordchars);
+       //este if hace la validacion comparando usuario y contraseña con los guardados en la clase clase_login
+        if (nombre.equals(login_admin.nombre_admin()) && contra_admin.equals(login_admin.contra_admin())) {
+           ventana_administrador admin = new ventana_administrador();
+           admin.setVisible(true);
+           this.dispose();
+    }   else {
+            JOptionPane.showMessageDialog(this, "usuario o contraseña incorrectos");
+    }
+        
     }//GEN-LAST:event_btn_ingresar_adminActionPerformed
 
     /**
