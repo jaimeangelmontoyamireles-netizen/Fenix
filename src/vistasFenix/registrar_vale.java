@@ -4,6 +4,7 @@
  */
 package vistasFenix;
 
+import controlador.Cmontos;
 import controlador.Cquincenas;
 import controlador.Cregistro_clientes;
 import javax.swing.JOptionPane;
@@ -37,6 +38,17 @@ public class registrar_vale extends javax.swing.JInternalFrame {
          this.cbbquincenas.setModel(
          new javax.swing.DefaultComboBoxModel<>(quincenasConVacio)
     );
+         Cmontos montosvale = new Cmontos();
+         java.util.List<String> listamontosconvacio = new java.util.ArrayList<>();
+         listamontosconvacio.add(" "); 
+         for (int monto : montosvale.Cmontos) {
+         listamontosconvacio.add(String.valueOf(monto));
+    }
+    String[] montosconvacio = listamontosconvacio.toArray(new String[0]);
+    this.ccbmontovale.setModel(
+        new javax.swing.DefaultComboBoxModel<>(montosconvacio)
+    );
+         
     }
 
     /**
@@ -54,7 +66,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         cbbquincenas = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        ccbmontovale = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -91,7 +103,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
         jLabel4.setFont(new java.awt.Font("Sitka Small", 0, 14)); // NOI18N
         jLabel4.setText("Ingresa la cantidad de quincenas a pagar");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ccbmontovale.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/confirmar.png"))); // NOI18N
         jButton1.setText("Confirmar");
@@ -134,7 +146,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(45, 45, 45)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ccbmontovale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(109, 109, 109)
                                 .addComponent(jLabel5))
                             .addComponent(jLabel3))
@@ -162,7 +174,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel4))
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ccbmontovale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
@@ -198,9 +210,9 @@ public class registrar_vale extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbbcliente;
     private javax.swing.JComboBox<String> cbbquincenas;
+    private javax.swing.JComboBox<String> ccbmontovale;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
