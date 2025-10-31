@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="iconifiable" type="boolean" value="true"/>
@@ -35,9 +35,9 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" pref="157" max="-2" attributes="0"/>
+                      <Component id="btncorte" min="-2" pref="157" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="138" max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" pref="157" max="-2" attributes="0"/>
+                      <Component id="btn_regpago_vale" min="-2" pref="157" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="309" max="-2" attributes="0"/>
@@ -59,8 +59,8 @@
               <Component id="jScrollPane1" min="-2" pref="65" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton1" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
-                  <Component id="jButton2" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
+                  <Component id="btncorte" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
+                  <Component id="btn_regpago_vale" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
           </Group>
@@ -75,22 +75,16 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="tablacorte">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="3" rowCount="4">
+              <Table columnCount="2" rowCount="4">
                 <Column editable="true" title="Cantidad de vales activos" type="java.lang.Object"/>
-                <Column editable="true" title="Cantidad anterior" type="java.lang.Object"/>
                 <Column editable="true" title="Cantidad a pagar" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
-                  <Editor/>
-                  <Renderer/>
-                </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
@@ -118,21 +112,27 @@
         <Property name="text" type="java.lang.String" value="Relacion quincenal de pagos"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btncorte">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/imgFenix/corte.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Corte quincenal"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btncorteActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btn_regpago_vale">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/imgFenix/registrar.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Registrar pago"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_regpago_valeActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
