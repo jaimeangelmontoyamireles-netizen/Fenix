@@ -4,9 +4,12 @@
  */
 package vistasFenix;
 
+import controlador.Ccortequincenal;
 import controlador.Cmontos;
 import controlador.Cquincenas;
 import controlador.Cregistro_clientes;
+import controlador.Cregistro_vales;
+import controlador.Cvale;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +21,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
     /**
      * Creates new form registrar_vale
      */
+    private boolean bloqueandoEventos = false;
     public registrar_vale() {
         initComponents();
         Cregistro_clientes clientes = new Cregistro_clientes();
@@ -67,7 +71,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
         cbbquincenas = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         ccbmontovale = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnconf_regvales = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
@@ -105,8 +109,13 @@ public class registrar_vale extends javax.swing.JInternalFrame {
 
         ccbmontovale.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/confirmar.png"))); // NOI18N
-        jButton1.setText("Confirmar");
+        btnconf_regvales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/confirmar.png"))); // NOI18N
+        btnconf_regvales.setText("Confirmar");
+        btnconf_regvales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnconf_regvalesActionPerformed(evt);
+            }
+        });
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/contrato.png"))); // NOI18N
         jButton2.setText("Firmar");
@@ -141,7 +150,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
                                         .addGap(197, 197, 197)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
+                                    .addComponent(btnconf_regvales, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
                         .addGap(38, 38, 38))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,7 +171,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbbcliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnconf_regvales, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -184,6 +193,7 @@ public class registrar_vale extends javax.swing.JInternalFrame {
 
     private void cbbquincenasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbquincenasActionPerformed
         // TODO add your handling code here:
+        if (bloqueandoEventos) return;
         String montoseleccionadostr = (String) this.cbbquincenas.getSelectedItem();
     if (montoseleccionadostr != null && montoseleccionadostr.trim().isEmpty()) { 
         javax.swing.JOptionPane.showMessageDialog(this, "por favor, seleccione un monto de la lista.");
@@ -197,18 +207,46 @@ public class registrar_vale extends javax.swing.JInternalFrame {
 
     private void cbbclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbclienteActionPerformed
         // TODO add your handling code here:
+        if (bloqueandoEventos) return;
         String nombreseleccionado = (String) this.cbbcliente.getSelectedItem();
     if (nombreseleccionado != null && nombreseleccionado.trim().isEmpty()) { 
         JOptionPane.showMessageDialog(this, "por favor seleccione un usuario de la lista");
     }
     }//GEN-LAST:event_cbbclienteActionPerformed
 
+    private void btnconf_regvalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnconf_regvalesActionPerformed
+        // TODO add your handling code here:
+         String cliente = (String) cbbcliente.getSelectedItem();
+    String quincenaStr = (String) cbbquincenas.getSelectedItem();
+    String montoStr = (String) ccbmontovale.getSelectedItem();
+
+    if (cliente == null || cliente.trim().isEmpty() ||
+        quincenaStr == null || quincenaStr.trim().isEmpty() ||
+        montoStr == null || montoStr.trim().isEmpty()) {
+
+        javax.swing.JOptionPane.showMessageDialog(this, "rellena todos los campos");
+        return;
+    }
+
+    int quincenas = Integer.parseInt(quincenaStr);
+    int monto = Integer.parseInt(montoStr);
+
+    Cvale vale = new Cvale(cliente, quincenas, monto);
+    Ccortequincenal.listaVales.add(vale);
+    bloqueandoEventos = true;
+    javax.swing.JOptionPane.showMessageDialog(this, "vale registrado correctamente");
+     cbbcliente.setSelectedIndex(0);
+    cbbquincenas.setSelectedIndex(0);
+    ccbmontovale.setSelectedIndex(0);
+    bloqueandoEventos = false;
+    }//GEN-LAST:event_btnconf_regvalesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnconf_regvales;
     private javax.swing.JComboBox<String> cbbcliente;
     private javax.swing.JComboBox<String> cbbquincenas;
     private javax.swing.JComboBox<String> ccbmontovale;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
