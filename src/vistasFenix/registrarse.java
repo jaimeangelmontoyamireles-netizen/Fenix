@@ -3,6 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vistasFenix;
+import database.Conexion;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -62,6 +68,11 @@ public class registrarse extends javax.swing.JFrame {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/confirmar.png"))); // NOI18N
         jButton1.setText("Confirmar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/regresar.png"))); // NOI18N
         jButton2.setText("Regresar");
@@ -160,6 +171,64 @@ public class registrarse extends javax.swing.JFrame {
         select.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         // Leer valores desde los campos (usando los nombres generados por NetBeans)
+    String nombre = jTextField1.getText().trim();
+    String apPat = jTextField2.getText().trim();
+    String apMat = jTextField3.getText().trim();
+    String usuario = jTextField4.getText().trim();
+    char[] passChars = jPasswordField1.getPassword();
+    String contrasenia = new String(passChars).trim();
+
+    // Validación básica
+    if (nombre.isEmpty() || apPat.isEmpty() || usuario.isEmpty() || contrasenia.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor completa los campos: Nombre, Apellido paterno, Usuario y Contraseña.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Sentencia SQL (coincide con la estructura de la tabla 'usuarios')
+    String sql = "INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, usuario, contrasenia, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?)";
+
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, nombre);
+        ps.setString(2, apPat);
+        ps.setString(3, apMat);
+        ps.setString(4, usuario);
+        ps.setString(5, contrasenia); // en pruebas; luego recomendaré hashear
+        ps.setString(6, "cliente"); // por defecto registramos como cliente
+
+        int rows = ps.executeUpdate();
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
+            // Limpiar campos y volver al selector
+            limpiarCampos();
+            vistasFenix.selector_login selector = new vistasFenix.selector_login();
+            selector.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo registrar. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (SQLIntegrityConstraintViolationException ex) {
+        JOptionPane.showMessageDialog(this, "El nombre de usuario ya existe. Elige otro.", "Usuario duplicado", JOptionPane.WARNING_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al registrar en la base de datos:\n" + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+}
+
+// Método auxiliar para limpiar campos (usar nombres generados por NetBeans)
+private void limpiarCampos() {
+    jTextField1.setText("");
+    jTextField2.setText("");
+    jTextField3.setText("");
+    jTextField4.setText("");
+    jPasswordField1.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

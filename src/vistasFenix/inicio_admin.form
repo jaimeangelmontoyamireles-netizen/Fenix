@@ -93,6 +93,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtusuario_admin">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtusuario_adminActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="pass_admin">
     </Component>
