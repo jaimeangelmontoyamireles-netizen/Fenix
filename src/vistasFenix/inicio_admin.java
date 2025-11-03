@@ -47,6 +47,12 @@ public class inicio_admin extends javax.swing.JFrame {
 
         jLabel3.setText("Contraseña");
 
+        txtusuario_admin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtusuario_adminActionPerformed(evt);
+            }
+        });
+
         btn_ingresar_admin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/entrar.png"))); // NOI18N
         btn_ingresar_admin.setText("Ingresar");
         btn_ingresar_admin.addActionListener(new java.awt.event.ActionListener() {
@@ -137,6 +143,10 @@ public class inicio_admin extends javax.swing.JFrame {
     }
         
     }//GEN-LAST:event_btn_ingresar_adminActionPerformed
+
+    private void txtusuario_adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusuario_adminActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtusuario_adminActionPerformed
 
     /**
      * @param args the command line arguments
