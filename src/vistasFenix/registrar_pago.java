@@ -4,6 +4,8 @@
  */
 package vistasFenix;
 
+import controlador.Cregistro_clientes;
+
 /**
  *
  * @author Asus
@@ -13,8 +15,63 @@ public class registrar_pago extends javax.swing.JInternalFrame {
     /**
      * Creates new form registrar_pago
      */
+     private javax.swing.ButtonGroup grupo1 = new javax.swing.ButtonGroup();
+    private javax.swing.ButtonGroup grupo2 = new javax.swing.ButtonGroup();
+    private boolean programmaticChange = false;
     public registrar_pago() {
         initComponents();
+        Cregistro_clientes clientes = new Cregistro_clientes();
+        ccbcliente_regpago.removeAllItems();
+        ccbcliente_regpago.addItem("Selecciona un cliente");
+        for (String nombre : clientes.nombres) {
+            ccbcliente_regpago.addItem(nombre);
+        }
+         grupo1.add(rdb_si);
+        grupo1.add(rdb_no);
+        grupo2.add(rdb_si2);
+        grupo2.add(rdb_no2);
+
+        // Ocultar al iniciar
+        lbl_pago_completo.setVisible(false);
+        rdb_si2.setVisible(false);
+        rdb_no2.setVisible(false);
+        lbl_cant_pagada.setVisible(false);
+        txt_cantidad.setVisible(false);
+
+        // Mostrar los segundos radios cuando se selecciona "Sí" del primero
+        rdb_si.addActionListener(e -> {
+            if (rdb_si.isSelected()) {
+                lbl_pago_completo.setVisible(true);
+                rdb_si2.setVisible(true);
+                rdb_no2.setVisible(true);
+            }
+        });
+
+        // Ocultar si se selecciona "No" del primero
+        rdb_no.addActionListener(e -> {
+            lbl_pago_completo.setVisible(false);
+            rdb_si2.setVisible(false);
+            rdb_no2.setVisible(false);
+            lbl_cant_pagada.setVisible(false);
+            txt_cantidad.setVisible(false);
+            grupo2.clearSelection(); // desmarca los radios del segundo grupo
+        });
+
+        // Mostrar campos cuando se selecciona "No" del segundo grupo
+        rdb_no2.addActionListener(e -> {
+            if (rdb_no2.isSelected()) {
+                lbl_cant_pagada.setVisible(true);
+                txt_cantidad.setVisible(true);
+            }
+        });
+
+        // Ocultar campos cuando se selecciona "Sí" del segundo grupo
+        rdb_si2.addActionListener(e -> {
+            if (rdb_si2.isSelected()) {
+                lbl_cant_pagada.setVisible(false);
+                txt_cantidad.setVisible(false);
+            }
+        });
     }
 
     /**
@@ -28,15 +85,15 @@ public class registrar_pago extends javax.swing.JInternalFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jLabel4 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        ccbcliente_regpago = new javax.swing.JComboBox<>();
+        lbl_pago = new javax.swing.JLabel();
+        rdb_si = new javax.swing.JRadioButton();
+        rdb_no = new javax.swing.JRadioButton();
+        lbl_pago_completo = new javax.swing.JLabel();
+        rdb_si2 = new javax.swing.JRadioButton();
+        rdb_no2 = new javax.swing.JRadioButton();
+        txt_cantidad = new javax.swing.JTextField();
+        lbl_cant_pagada = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
 
@@ -52,31 +109,52 @@ public class registrar_pago extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
         jLabel2.setText("Selecciona el cliente ");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel3.setFont(new java.awt.Font("Sitka Small", 0, 12)); // NOI18N
-        jLabel3.setText("¿El cliente pago?");
-
-        jRadioButton1.setText("Si");
-
-        jRadioButton2.setText("No");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        ccbcliente_regpago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ccbcliente_regpago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                ccbcliente_regpagoActionPerformed(evt);
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Sitka Small", 0, 12)); // NOI18N
-        jLabel4.setText("¿Hizo su pago completo?");
+        lbl_pago.setFont(new java.awt.Font("Sitka Small", 0, 12)); // NOI18N
+        lbl_pago.setText("¿El cliente pago?");
 
-        jRadioButton3.setText("Si");
+        rdb_si.setText("Si");
+        rdb_si.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdb_siActionPerformed(evt);
+            }
+        });
 
-        jRadioButton4.setText("No");
+        rdb_no.setText("No");
+        rdb_no.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdb_noActionPerformed(evt);
+            }
+        });
 
-        jLabel5.setText("Ingresa la cantidad pagada");
+        lbl_pago_completo.setFont(new java.awt.Font("Sitka Small", 0, 12)); // NOI18N
+        lbl_pago_completo.setText("¿Hizo su pago completo?");
+
+        rdb_si2.setText("Si");
+
+        rdb_no2.setText("No");
+
+        txt_cantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_cantidadActionPerformed(evt);
+            }
+        });
+
+        lbl_cant_pagada.setText("Ingresa la cantidad pagada");
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/confirmar.png"))); // NOI18N
         jButton1.setText("Confirmar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/fenix 128px.png"))); // NOI18N
 
@@ -93,67 +171,65 @@ public class registrar_pago extends javax.swing.JInternalFrame {
                                 .addGap(23, 23, 23)
                                 .addComponent(jButton1))
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(lbl_pago))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lbl_cant_pagada)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(33, 33, 33)
-                                        .addComponent(jLabel3))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel5)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jRadioButton3)
-                                                .addGap(79, 79, 79)
-                                                .addComponent(jRadioButton4))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jRadioButton1)
-                                                .addGap(79, 79, 79)
-                                                .addComponent(jRadioButton2))))
+                                        .addComponent(rdb_si2)
+                                        .addGap(79, 79, 79)
+                                        .addComponent(rdb_no2))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(9, 9, 9)
-                                        .addComponent(jLabel4))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(47, 47, 47)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                                .addComponent(jLabel6))))
+                                        .addComponent(rdb_si)
+                                        .addGap(79, 79, 79)
+                                        .addComponent(rdb_no))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(lbl_pago_completo))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addContainerGap()
                             .addComponent(jLabel2)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ccbcliente_regpago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(129, 129, 129)
                             .addComponent(jLabel1))))
-                .addGap(62, 62, 62))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addGap(50, 50, 50))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(ccbcliente_regpago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_pago)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2))
+                            .addComponent(rdb_si)
+                            .addComponent(rdb_no))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
+                        .addComponent(lbl_pago_completo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton3)
-                            .addComponent(jRadioButton4))
+                            .addComponent(rdb_si2)
+                            .addComponent(rdb_no2))
                         .addGap(1, 1, 1)
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbl_cant_pagada))
                     .addComponent(jLabel6))
+                .addGap(18, 18, 18)
+                .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -162,24 +238,63 @@ public class registrar_pago extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+    private void rdb_noActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdb_noActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+    }//GEN-LAST:event_rdb_noActionPerformed
+
+    private void ccbcliente_regpagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccbcliente_regpagoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ccbcliente_regpagoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+          String seleccionado = (String) ccbcliente_regpago.getSelectedItem();
+        // Validar selección
+        if (seleccionado.equals("Selecciona un cliente")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Debes seleccionar un cliente de la lista");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Pago registrado con éxito");
+            jButton1.addActionListener(e -> {
+            // Limpiar campos y restablecer todo
+           
+            
+            // Ocultar todo lo secundario
+            lbl_pago_completo.setVisible(false);
+            rdb_si2.setVisible(false);
+            rdb_no2.setVisible(false);
+            lbl_cant_pagada.setVisible(false);
+            txt_cantidad.setVisible(false);
+        });
+            // Aquí puedes agregar lo que necesites hacer después
+        }
+        ccbcliente_regpago.setSelectedIndex(0);
+            txt_cantidad.setText("");
+            grupo1.clearSelection();
+            grupo2.clearSelection();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void rdb_siActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdb_siActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rdb_siActionPerformed
+
+    private void txt_cantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cantidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_cantidadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ccbcliente_regpago;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lbl_cant_pagada;
+    private javax.swing.JLabel lbl_pago;
+    private javax.swing.JLabel lbl_pago_completo;
+    private javax.swing.JRadioButton rdb_no;
+    private javax.swing.JRadioButton rdb_no2;
+    private javax.swing.JRadioButton rdb_si;
+    private javax.swing.JRadioButton rdb_si2;
+    private javax.swing.JTextField txt_cantidad;
     // End of variables declaration//GEN-END:variables
 }
