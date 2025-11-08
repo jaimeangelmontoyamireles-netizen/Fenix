@@ -198,10 +198,10 @@ public class registrarse extends javax.swing.JFrame {
         ps.setString(2, apPat);
         ps.setString(3, apMat);
         ps.setString(4, usuario);
-        ps.setString(5, contrasenia); // en pruebas; luego recomendaré hashear
+        ps.setString(5, contrasenia); // 
         ps.setString(6, "cliente"); // por defecto registramos como cliente
 
-        int rows = ps.executeUpdate();
+        int rows = ps.executeUpdate();  
         if (rows > 0) {
             JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
             // Limpiar campos y volver al selector

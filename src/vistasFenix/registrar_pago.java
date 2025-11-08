@@ -3,18 +3,36 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package vistasFenix;
+import dao.PagoDAO;
+import java.math.BigDecimal;
+import models.Pago;
+import java.time.LocalDate;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Asus
  */
 public class registrar_pago extends javax.swing.JInternalFrame {
+private PagoDAO pagoDAO;
+
+private void cargarClientes() {
+    List<String> clientes = pagoDAO.obtenerUsuarios();
+    jComboBox1.removeAllItems();
+    for (String cliente : clientes) {
+        jComboBox1.addItem(cliente);
+    }
+}
 
     /**
      * Creates new form registrar_pago
      */
     public registrar_pago() {
         initComponents();
+        pagoDAO = new PagoDAO();
+        cargarClientes();
+
     }
 
     /**
@@ -53,6 +71,11 @@ public class registrar_pago extends javax.swing.JInternalFrame {
         jLabel2.setText("Selecciona el cliente ");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Sitka Small", 0, 12)); // NOI18N
         jLabel3.setText("¿El cliente pago?");
@@ -73,10 +96,21 @@ public class registrar_pago extends javax.swing.JInternalFrame {
 
         jRadioButton4.setText("No");
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
         jLabel5.setText("Ingresa la cantidad pagada");
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/confirmar.png"))); // NOI18N
         jButton1.setText("Confirmar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/fenix 128px.png"))); // NOI18N
 
@@ -165,6 +199,54 @@ public class registrar_pago extends javax.swing.JInternalFrame {
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here: String clienteSeleccionado = (String) jComboBox1.getSelectedItem();
+     PagoDAO pagoDAO = new PagoDAO();
+
+    // Obtener el cliente seleccionado del combo
+    String clienteSeleccionado = (String) jComboBox1.getSelectedItem(); 
+
+    if (clienteSeleccionado == null || clienteSeleccionado.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Selecciona un cliente antes de registrar el pago.");
+        return;
+    }
+
+    // Obtener el ID del cliente
+    int idUsuario = pagoDAO.obtenerIdUsuarioPorNombre(clienteSeleccionado);
+
+    if (idUsuario == -1) {
+        JOptionPane.showMessageDialog(this, "No se encontró el cliente seleccionado.");
+        return;
+    }
+
+    // Obtener el monto
+    double montoPagado;
+    try {
+        montoPagado = Double.parseDouble(jTextField1.getText()); 
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Ingresa un monto válido.");
+        return;
+    }
+
+    //Crear objeto Pago
+    Pago pago = new Pago(idUsuario, BigDecimal.valueOf(montoPagado), LocalDate.now());
+
+    //Registrar en la base de datos
+    if (pagoDAO.registrarPago(pago)) {
+        JOptionPane.showMessageDialog(this, "Pago registrado exitosamente.");
+    } else {
+        JOptionPane.showMessageDialog(this, "Error al registrar el pago.");
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
