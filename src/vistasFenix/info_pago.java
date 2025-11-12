@@ -4,6 +4,10 @@
  */
 package vistasFenix;
 
+import controlador.Ccortequincenal;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Asus
@@ -27,10 +31,10 @@ public class info_pago extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablacorte = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btncorte = new javax.swing.JButton();
+        btn_regpago_vale = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setClosable(true);
@@ -39,27 +43,37 @@ public class info_pago extends javax.swing.JInternalFrame {
         setResizable(true);
         setVisible(true);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablacorte.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Cantidad de vales activos", "Cantidad anterior", "Cantidad a pagar"
+                "Cantidad de vales activos", "Cantidad a pagar"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablacorte);
 
         jLabel1.setFont(new java.awt.Font("Sitka Small", 0, 18)); // NOI18N
         jLabel1.setText("Relacion quincenal de pagos");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/corte.png"))); // NOI18N
-        jButton1.setText("Corte quincenal");
+        btncorte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/corte.png"))); // NOI18N
+        btncorte.setText("Corte quincenal");
+        btncorte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncorteActionPerformed(evt);
+            }
+        });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/registrar.png"))); // NOI18N
-        jButton2.setText("Registrar pago");
+        btn_regpago_vale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/registrar.png"))); // NOI18N
+        btn_regpago_vale.setText("Registrar pago");
+        btn_regpago_vale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_regpago_valeActionPerformed(evt);
+            }
+        });
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgFenix/fenix 128px.png"))); // NOI18N
 
@@ -75,9 +89,9 @@ public class info_pago extends javax.swing.JInternalFrame {
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(145, 145, 145)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btncorte, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(138, 138, 138)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_regpago_vale, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(309, 309, 309)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -94,21 +108,47 @@ public class info_pago extends javax.swing.JInternalFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btncorte, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_regpago_vale, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(57, 57, 57))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btncorteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncorteActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel modelo = (DefaultTableModel) tablacorte.getModel();
+    modelo.setRowCount(0);
+
+    int valesActivos = Ccortequincenal.contarValesActivos();
+    int totalVales = Ccortequincenal.sumarValesActivos();
+
+    Object[] fila = new Object[2];
+    fila[0] = valesActivos;
+    fila[1] = totalVales;
+
+    modelo.addRow(fila);
+    }//GEN-LAST:event_btncorteActionPerformed
+
+    private void btn_regpago_valeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_regpago_valeActionPerformed
+        // TODO add your handling code here:
+        if (tablacorte.getRowCount() > 0) {
+        JOptionPane.showMessageDialog(null, "pago registrado con exito");
+        DefaultTableModel modelo = (DefaultTableModel) tablacorte.getModel();
+        modelo.setRowCount(0);
+    } else {
+        JOptionPane.showMessageDialog(null, "no hay datos para registrar");
+    }
+    }//GEN-LAST:event_btn_regpago_valeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btn_regpago_vale;
+    private javax.swing.JButton btncorte;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablacorte;
     // End of variables declaration//GEN-END:variables
 }
