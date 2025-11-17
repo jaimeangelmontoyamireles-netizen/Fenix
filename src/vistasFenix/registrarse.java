@@ -3,19 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vistasFenix;
+
 import database.Conexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Asus
  */
 public class registrarse extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(registrarse.class.getName());
 
     /**
@@ -23,6 +25,7 @@ public class registrarse extends javax.swing.JFrame {
      */
     public registrarse() {
         initComponents();
+        cargarUsuariosEnTabla();
     }
 
     /**
@@ -34,6 +37,8 @@ public class registrarse extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -48,6 +53,21 @@ public class registrarse extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton2 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaUsuarios = new javax.swing.JTable();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,6 +102,21 @@ public class registrarse extends javax.swing.JFrame {
             }
         });
 
+        tablaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre", "Apellido P.", "Apellido M.", "Usuario", "Contraseña", "Tipo"
+            }
+        ));
+        tablaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaUsuariosMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaUsuarios);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,7 +140,7 @@ public class registrarse extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                                     .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField2))
                                 .addGap(81, 81, 81)))
@@ -122,9 +157,12 @@ public class registrarse extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addComponent(jButton1)
-                .addGap(39, 39, 39)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(39, 39, 39)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -159,7 +197,9 @@ public class registrarse extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         pack();
@@ -172,63 +212,98 @@ public class registrarse extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void cargarUsuariosEnTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
+        modelo.setRowCount(0);
+
+        String sql = "SELECT * FROM usuarios";
+
+        try (Connection conn = Conexion.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); java.sql.ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                modelo.addRow(new Object[]{
+                    rs.getInt("id_usuario"),
+                    rs.getString("nombre"),
+                    rs.getString("apellido_paterno"),
+                    rs.getString("apellido_materno"),
+                    rs.getString("usuario"),
+                    rs.getString("contrasenia"),
+                    rs.getString("tipo_usuario")
+                });
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar usuarios: " + ex.getMessage());
+        }
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         // Leer valores desde los campos (usando los nombres generados por NetBeans)
-    String nombre = jTextField1.getText().trim();
-    String apPat = jTextField2.getText().trim();
-    String apMat = jTextField3.getText().trim();
-    String usuario = jTextField4.getText().trim();
-    char[] passChars = jPasswordField1.getPassword();
-    String contrasenia = new String(passChars).trim();
+        // Leer valores desde los campos (usando los nombres generados por NetBeans)
+        String nombre = jTextField1.getText().trim();
+        String apPat = jTextField2.getText().trim();
+        String apMat = jTextField3.getText().trim();
+        String usuario = jTextField4.getText().trim();
+        char[] passChars = jPasswordField1.getPassword();
+        String contrasenia = new String(passChars).trim();
 
-    // Validación básica
-    if (nombre.isEmpty() || apPat.isEmpty() || usuario.isEmpty() || contrasenia.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor completa los campos: Nombre, Apellido paterno, Usuario y Contraseña.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    // Sentencia SQL (coincide con la estructura de la tabla 'usuarios')
-    String sql = "INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, usuario, contrasenia, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?)";
-
-    try (Connection conn = Conexion.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-
-        ps.setString(1, nombre);
-        ps.setString(2, apPat);
-        ps.setString(3, apMat);
-        ps.setString(4, usuario);
-        ps.setString(5, contrasenia); // 
-        ps.setString(6, "cliente"); // por defecto registramos como cliente
-
-        int rows = ps.executeUpdate();  
-        if (rows > 0) {
-            JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
-            // Limpiar campos y volver al selector
-            limpiarCampos();
-            vistasFenix.selector_login selector = new vistasFenix.selector_login();
-            selector.setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo registrar. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+        // Validación básica
+        if (nombre.isEmpty() || apPat.isEmpty() || usuario.isEmpty() || contrasenia.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor completa los campos: Nombre, Apellido paterno, Usuario y Contraseña.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
-    } catch (SQLIntegrityConstraintViolationException ex) {
-        JOptionPane.showMessageDialog(this, "El nombre de usuario ya existe. Elige otro.", "Usuario duplicado", JOptionPane.WARNING_MESSAGE);
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al registrar en la base de datos:\n" + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
+        // Sentencia SQL (coincide con la estructura de la tabla 'usuarios')
+        String sql = "INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, usuario, contrasenia, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = Conexion.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+            ps.setString(2, apPat);
+            ps.setString(3, apMat);
+            ps.setString(4, usuario);
+            ps.setString(5, contrasenia); // 
+            ps.setString(6, "cliente"); // por defecto registramos como cliente
+
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión.", "Registro", JOptionPane.INFORMATION_MESSAGE);
+                // Limpiar campos y volver al selector
+                limpiarCampos();
+                vistasFenix.selector_login selector = new vistasFenix.selector_login();
+                selector.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo registrar. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(this, "El nombre de usuario ya existe. Elige otro.", "Usuario duplicado", JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al registrar en la base de datos:\n" + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }
-}
 
 // Método auxiliar para limpiar campos (usar nombres generados por NetBeans)
-private void limpiarCampos() {
-    jTextField1.setText("");
-    jTextField2.setText("");
-    jTextField3.setText("");
-    jTextField4.setText("");
-    jPasswordField1.setText("");
+    private void limpiarCampos() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jPasswordField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
+           int fila = tablaUsuarios.getSelectedRow();
+    if (fila >= 0) {
+        jTextField1.setText(tablaUsuarios.getValueAt(fila, 1).toString());
+        jTextField2.setText(tablaUsuarios.getValueAt(fila, 2).toString());
+        jTextField3.setText(tablaUsuarios.getValueAt(fila, 3).toString());
+        jTextField4.setText(tablaUsuarios.getValueAt(fila, 4).toString());
+        jPasswordField1.setText(tablaUsuarios.getValueAt(fila, 5).toString());
+    }
+    }//GEN-LAST:event_tablaUsuariosMouseClicked
 
     /**
      * @param args the command line arguments
@@ -266,9 +341,13 @@ private void limpiarCampos() {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables
 }
