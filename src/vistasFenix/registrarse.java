@@ -26,6 +26,80 @@ public class registrarse extends javax.swing.JFrame {
     public registrarse() {
         initComponents();
         cargarUsuariosEnTabla();
+        agregarEventos();
+    }
+
+    private void agregarEventos() {
+
+        // ------------ Evento BTN EDITAR -----------------
+        btnEditar.addActionListener(evt -> {
+            int fila = tablaUsuarios.getSelectedRow();
+
+            if (fila < 0) {
+                JOptionPane.showMessageDialog(this, "Selecciona un usuario primero");
+                return;
+            }
+
+            int id = Integer.parseInt(tablaUsuarios.getValueAt(fila, 0).toString());
+
+            String sql = "UPDATE usuarios SET nombre=?, apellido_paterno=?, apellido_materno=?, usuario=?, contrasenia=? WHERE id_usuario=?";
+
+            try (Connection conn = Conexion.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setString(1, jTextField1.getText());
+                ps.setString(2, jTextField2.getText());
+                ps.setString(3, jTextField3.getText());
+                ps.setString(4, jTextField4.getText());
+                ps.setString(5, new String(jPasswordField1.getPassword()));
+                ps.setInt(6, id);
+
+                ps.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.");
+
+                cargarUsuariosEnTabla();
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
+            }
+        });
+
+        // ------------ Evento BTN ELIMINAR -----------------
+        btnEliminar.addActionListener(evt -> {
+            int fila = tablaUsuarios.getSelectedRow();
+
+            if (fila < 0) {
+                JOptionPane.showMessageDialog(this, "Selecciona un usuario primero");
+                return;
+            }
+
+            int id = Integer.parseInt(tablaUsuarios.getValueAt(fila, 0).toString());
+
+            int confirma = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Seguro que deseas eliminar este usuario?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirma != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            String sql = "DELETE FROM usuarios WHERE id_usuario=?";
+
+            try (Connection conn = Conexion.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setInt(1, id);
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Usuario eliminado.");
+                cargarUsuariosEnTabla();
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+            }
+        });
+
     }
 
     /**
@@ -55,6 +129,8 @@ public class registrarse extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
+        btnEditar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -117,6 +193,10 @@ public class registrarse extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tablaUsuarios);
 
+        btnEditar.setText("Editar");
+
+        btnEliminar.setText("Eliminar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -156,13 +236,20 @@ public class registrarse extends javax.swing.JFrame {
                         .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(39, 39, 39)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(btnEditar)
+                        .addGap(90, 90, 90)
+                        .addComponent(btnEliminar)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -199,7 +286,11 @@ public class registrarse extends javax.swing.JFrame {
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEditar)
+                    .addComponent(btnEliminar))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         pack();
@@ -294,15 +385,16 @@ public class registrarse extends javax.swing.JFrame {
         jPasswordField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
+
     private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
-           int fila = tablaUsuarios.getSelectedRow();
-    if (fila >= 0) {
-        jTextField1.setText(tablaUsuarios.getValueAt(fila, 1).toString());
-        jTextField2.setText(tablaUsuarios.getValueAt(fila, 2).toString());
-        jTextField3.setText(tablaUsuarios.getValueAt(fila, 3).toString());
-        jTextField4.setText(tablaUsuarios.getValueAt(fila, 4).toString());
-        jPasswordField1.setText(tablaUsuarios.getValueAt(fila, 5).toString());
-    }
+        int fila = tablaUsuarios.getSelectedRow();
+        if (fila >= 0) {
+            jTextField1.setText(tablaUsuarios.getValueAt(fila, 1).toString());
+            jTextField2.setText(tablaUsuarios.getValueAt(fila, 2).toString());
+            jTextField3.setText(tablaUsuarios.getValueAt(fila, 3).toString());
+            jTextField4.setText(tablaUsuarios.getValueAt(fila, 4).toString());
+            jPasswordField1.setText(tablaUsuarios.getValueAt(fila, 5).toString());
+        }
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
     /**
@@ -331,6 +423,8 @@ public class registrarse extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
