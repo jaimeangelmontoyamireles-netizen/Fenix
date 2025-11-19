@@ -1,19 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
+
 import database.Conexion;
 import models.Vale;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-/**
- *
- * @author campo
- */
+
 public class ValeDAO {
-     // Registrar un vale en la base de datos
+
+    // Registrar un vale en la base de datos
     public boolean registrarVale(Vale vale) {
         String sql = "INSERT INTO vales (id_usuario, monto_total, saldo_actual, fecha_vencimiento, estado) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConnection();
@@ -22,7 +17,7 @@ public class ValeDAO {
             ps.setInt(1, vale.getIdUsuario());
             ps.setDouble(2, vale.getMontoTotal());
             ps.setDouble(3, vale.getSaldoActual());
-            ps.setDate(4, java.sql.Date.valueOf(vale.getFechaVencimiento())); // 👈 directo
+            ps.setDate(4, vale.getFechaVencimiento());
             ps.setString(5, vale.getEstado());
 
             ps.executeUpdate();
@@ -34,11 +29,12 @@ public class ValeDAO {
         }
     }
 
-    // Obtener lista de clientes (solo tipo 'cliente')
+    // Obtener lista de usuarios cliente
     public List<String> obtenerUsuarios() {
         List<String> lista = new ArrayList<>();
         String sql = "SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre_completo " +
                      "FROM usuarios WHERE tipo_usuario = 'cliente'";
+
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -57,6 +53,7 @@ public class ValeDAO {
     public int obtenerIdUsuarioPorNombre(String nombreCompleto) {
         String sql = "SELECT id_usuario FROM usuarios " +
                      "WHERE CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) = ?";
+
         try (Connection conn = Conexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -71,5 +68,43 @@ public class ValeDAO {
             System.out.println("Error al obtener ID de usuario: " + e.getMessage());
         }
         return -1;
+    }
+
+    // Obtener vale activo por ID de usuario
+    public int obtenerValeActivoPorUsuario(int idUsuario) {
+        String sql = "SELECT id_vale FROM vales WHERE id_usuario = ? AND estado = 'activo' LIMIT 1";
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idUsuario);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id_vale");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al obtener vale activo: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    // Actualizar saldo actual (resta montoPago)
+    public boolean actualizarSaldo(int idVale, java.math.BigDecimal montoPago) {
+        String sql = "UPDATE vales SET saldo_actual = saldo_actual - ? WHERE id_vale = ?";
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBigDecimal(1, montoPago);
+            ps.setInt(2, idVale);
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar saldo del vale: " + e.getMessage());
+            return false;
+        }
     }
 }

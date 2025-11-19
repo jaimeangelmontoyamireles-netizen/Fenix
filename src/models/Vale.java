@@ -16,17 +16,19 @@ public class Vale {
     private double montoTotal;
     private double saldoActual;
     private String estado;
-    private String fechaVencimiento;
+    private java.sql.Date fechaVencimiento;
     // Constructor vacío
     public Vale() {}
 
-    // Constructor con parámetros
+   //Constructor con parametros
     public Vale(int idUsuario, double montoTotal, double saldoActual, LocalDate fechaVencimiento, String estado) {
-        this.idUsuario = idUsuario;
-        this.montoTotal = montoTotal;
-        this.saldoActual = saldoActual;
-        this.estado = estado;
-    }
+    this.idUsuario = idUsuario;
+    this.montoTotal = montoTotal;
+    this.saldoActual = saldoActual;
+    this.estado = estado;
+    this.fechaVencimiento = java.sql.Date.valueOf(fechaVencimiento); 
+}
+
 
     // Getters y Setters
     public int getIdVale() { return idVale; }
@@ -44,10 +46,13 @@ public class Vale {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
    
-    public String getFechaVencimiento() {
+
+public java.sql.Date getFechaVencimiento() {
     return fechaVencimiento;
 }
-    public void setFechaVencimiento(String fechaVencimiento) {
+
+public void setFechaVencimiento(java.sql.Date fechaVencimiento) {
     this.fechaVencimiento = fechaVencimiento;
 }
+
 }
